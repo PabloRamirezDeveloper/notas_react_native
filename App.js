@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 
-import { View, Text, StyleSheet, Pressable, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Modal, FlatList } from 'react-native';
 
 import Formulario from './src/components/Formulario';
 
+import Nota from './src/components/Nota';
+
 const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [notas, setNotas] = useState([]);
 
   return (
     <View style={styles.container}>
@@ -22,9 +25,28 @@ const App = () => {
         <Text style={styles.btnTextoNuevaNota}>Nueva Nota</Text>
       </Pressable>
 
-      <Formulario 
-          modalVisible={modalVisible} 
-          setModalVisible = {setModalVisible}
+      {notas.length === 0 ? <Text style={styles.noHayNotas}>Aún no hay notas </Text> :
+        <FlatList
+          style = {styles.listado}
+          data={notas}
+          keyExtractor={item => item.id} //Va a buscar en el arreglo un valor que sea único
+          renderItem={({ item }) => { //Es como se nombra al componente que se va a mostrar
+
+            return (
+              <Nota
+                item={item}
+              />
+            )
+          }}
+
+
+        />}
+      <Formulario
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        notas={notas}
+        setNotas={setNotas}
+
       />
     </View>
   );
@@ -60,6 +82,16 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textTransform: 'uppercase',
   },
+  noHayNotas: {
+    marginTop: 40,
+    textAlign: 'center',
+    fontWeight: '800',
+    fontSize: 24
+  },
+  listado: {
+    marginTop: 50,
+    marginHorizontal: 30
+  }
 }); //Ya que styles se declara como un objeto,
 //para aplicar estilos tenemos que declarar
 //propiedades dentro del objeto styles.

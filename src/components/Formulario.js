@@ -1,14 +1,45 @@
 import React, { useState } from 'react';
 
-import { Modal, Text, StyleSheet, View, TextInput, SafeAreaView, ScrollView, Pressable } from 'react-native';
+import { Modal, Text, StyleSheet, View, TextInput, ScrollView, Pressable, Alert } from 'react-native';
 
-import DatePicker from 'react-native-date-picker';
 
-const Formulario = ({ modalVisible, setModalVisible }) => {
+
+const Formulario = ({ modalVisible, setModalVisible, notas, setNotas }) => {
 
   const [titulo, setTitulo] = useState('');
   const [contenido, setContenido] = useState('');
   const [fecha, setFecha] = useState(new Date());
+
+  const handleNota = () => {
+    //Validamos el formulario
+    if ([titulo, contenido].includes('')) {
+
+      Alert.alert(
+        'Error',
+        'Todos los campos son obligatorios'
+      )
+      return //Sirve para que no se ejecute la siguiente 
+      //linea del if
+    }
+
+    const nuevaNota = {
+      id: Date.now(),
+      titulo,
+      contenido,
+      fecha
+
+    }
+
+    setNotas([...notas, nuevaNota]);
+    setModalVisible(!modalVisible); //Cerramos la ventana Modal
+
+    setTitulo('');
+    setContenido('');
+    setFecha(new Date());
+
+  }
+
+
 
   return (
     <Modal
@@ -53,7 +84,12 @@ const Formulario = ({ modalVisible, setModalVisible }) => {
             onChangeText={setContenido}
           />
         </View>
-
+        <Pressable
+          style={styles.btnNuevaNota}
+          onPress={() => handleNota()}
+        >
+          <Text style={styles.btnNuevaNotaTexto}>Agregar Nota</Text>
+        </Pressable>
       </ScrollView>
 
     </Modal>
@@ -69,26 +105,26 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '400',
     textAlign: 'center',
-    marginTop: 30,
+    marginTop: 20,
     color: '#FFF',
-    marginBottom: 15
+    marginBottom: 5
 
   },
   tituloBold: {
     fontWeight: '900',
   },
   btnCancelar: {
-    marginTop: 20,
-    marginBottom: 35,
+    marginTop: 15,
+    marginBottom: 40,
     marginHorizontal: 30,
-    backgroundColor: '#7cea9cff',
+    backgroundColor: '#55d6beff',
     padding: 15,
     borderRadius: 10,
   },
   btnCancelarTexto: {
     color: '#593959ff',
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '900',
     textTransform: 'uppercase'
   },
@@ -107,8 +143,23 @@ const styles = StyleSheet.create({
   },
   inputArea: {
     textAlignVertical: 'top',
-    height: 350,
+    height: 300,
     fontSize: 20
+  },
+  btnNuevaNota: {
+    marginTop: 40,
+    marginBottom: 30,
+    backgroundColor: '#2e5eaaff',
+    marginHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 10,
+  },
+  btnNuevaNotaTexto: {
+    textAlign: 'center',
+    color: '#593959ff',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    fontWeight: '900',
   }
 })
 export default Formulario;

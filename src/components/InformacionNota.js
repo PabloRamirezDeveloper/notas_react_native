@@ -1,45 +1,47 @@
 import React from 'react';
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {formaterFecha} from '../helpers';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { formaterFecha } from '../helpers';
 
-const InformacionNota = ({nota, setNota, setModalNota}) => {
+const InformacionNota = ({ nota, setNota, setModalNota }) => {
   return (
-    <SafeAreaView style={styles.contenedor}>
-      <Text style={styles.cabecera}>
-        Resumen {''}
-        <Text style={styles.cabeceraBold}>Nota</Text>
-      </Text>
+    <ScrollView>
+      <SafeAreaView style={styles.contenedor}>
+        <Text style={styles.cabecera}>
+          Resumen {''}
+          <Text style={styles.cabeceraBold}>Nota</Text>
+        </Text>
 
-      <View>
-        <Pressable
-          onLongPress={() => {
-            setModalNota(false);
-            setNota({});
-          }}
-          style={styles.btnCerrar}>
-          <Text style={styles.btnCerrarTexto}>x Cerrar</Text>
-        </Pressable>
-      </View>
-
-      <View style={styles.resumen}>
-        <View style={styles.campo}>
-          <Text style={styles.label}>Titulo:</Text>
-          <Text style={styles.valor}>{nota.titulo} </Text>
+        <View>
+          <Pressable
+            onLongPress={() => {
+              setModalNota(false);
+              setNota({});
+            }}
+            style={styles.btnCerrar}>
+            <Text style={styles.btnCerrarTexto}>x Cerrar</Text>
+          </Pressable>
         </View>
 
-        <View style={styles.campo}>
-          <Text style={styles.label}>Contenido:</Text>
-          <Text style={[styles.valor, styles.contenido]}>
-            {nota.contenido}{' '}
-          </Text>
-        </View>
+        <View style={styles.resumen}>
+          <View style={styles.campo}>
+            <Text style={styles.label}>Titulo:</Text>
+            <Text style={styles.valor}>{nota.titulo} </Text>
+          </View>
 
-        <View style={styles.campo}>
-          <Text style={styles.label}>Fecha:</Text>
-          <Text style={styles.valor}>{formaterFecha(nota.fecha)} </Text>
+          <View style={styles.campo}>
+            <Text style={styles.label}>Contenido:</Text>
+            <Text style={[styles.valor, styles.contenido]}>
+              {nota.contenido}{' '}
+            </Text>
+          </View>
+
+          <View style={styles.campo}>
+            <Text style={styles.label}>Fecha:</Text>
+            <Text style={styles.valor}>{formaterFecha(nota.fecha)} </Text>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 

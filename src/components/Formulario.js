@@ -1,101 +1,141 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 
-import { Modal, Text, StyleSheet, View, TextInput, ScrollView, Pressable, Alert } from 'react-native';
+import {
+  Modal,
+  Text,
+  StyleSheet,
+  View,
+  TextInput,
+  ScrollView,
+  Pressable,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
 
-
-
-const Formulario = ({ modalVisible, setModalVisible, notas, setNotas }) => {
-
+const Formulario = ({
+  modalVisible,
+  notas,
+  setNotas,
+  nota,
+  setNota,
+  cerrarModalForm,
+}) => {
   const [titulo, setTitulo] = useState('');
   const [contenido, setContenido] = useState('');
   const [fecha, setFecha] = useState(new Date());
+  const [id, setId] = useState('');
+
+  useEffect(() => {
+    if (Object.values(nota).length > 0) {
+      setTitulo(nota.titulo);
+
+      setContenido(nota.contenido);
+      setId(nota.id);
+    }
+  }, [nota]);
 
   const handleNota = () => {
     //Validamos el formulario
     if ([titulo, contenido].includes('')) {
-
-      Alert.alert(
-        'Error',
-        'Todos los campos son obligatorios'
-      )
-      return //Sirve para que no se ejecute la siguiente 
+      Alert.alert('Error', 'Todos los campos son obligatorios');
+      return; //Sirve para que no se ejecute la siguiente
       //linea del if
     }
 
     const nuevaNota = {
-      id: Date.now(),
       titulo,
       contenido,
-      fecha
+      fecha,
+    };
 
+    //Revisamos por medio del id si es un registro nuevo o
+    //si estamos editando
+
+    if (id) {
+      // editando una nota
+      nuevaNota.id = id;
+      const notasActualizadas = notas.map(notaState =>
+        notaState.id === nuevaNota.id ? nuevaNota : notaState,
+      );
+
+      setNotas(notasActualizadas);
+
+      setNota({});
+    } else {
+      //agregando una nueva nota
+
+      nuevaNota.id = Date.now();
+      setNotas([...notas, nuevaNota]);
     }
-
-    setNotas([...notas, nuevaNota]);
-    setModalVisible(!modalVisible); //Cerramos la ventana Modal
-
+    cerrarModalForm();
+    setId('');
     setTitulo('');
     setContenido('');
     setFecha(new Date());
-
-  }
-
-
+  };
 
   return (
     <Modal
       animationType="slide" //Sirve para ver la animacion de la ventana modal
       visible={modalVisible} //Por medio del prop 'visible' logramos
-    //que el componente Modal se muestre o 
-    //desaparezca
+      //que el componente Modal se muestre o
+      //desaparezca
     >
       <ScrollView style={styles.contenido}>
+        <SafeAreaView>
+          <Text style={styles.titulo}>
+            {nota.id ? 'Editar' : 'Nueva'} {''}
+            <Text style={styles.tituloBold}>Nota</Text>
+          </Text>
 
-        <Text style={styles.titulo}>Nueva {''}
-          <Text style={styles.tituloBold}>Nota</Text>
-        </Text>
+          <Pressable
+            style={styles.btnCancelar}
+            onLongPress={() => {
+              cerrarModalForm();
+              setNota({});
+              setTitulo('');
+              setContenido('');
+              setFecha(new Date());
+              setId('');
+            }}>
+            <Text style={styles.btnCancelarTexto}>X Cancelar</Text>
+          </Pressable>
 
-        <Pressable
-          style={styles.btnCancelar}
-          onLongPress={() => setModalVisible(!modalVisible)}
-        >
-          <Text style={styles.btnCancelarTexto}>X Cancelar</Text>
-        </Pressable>
+          <View style={styles.campo}>
+            <TextInput
+              style={styles.input}
+              placeholder="Titulo..."
+              placeholderTextColor="#888"
+              value={titulo}
+              onChangeText={setTitulo} //Evento que sirve para recibir el valor de lo que el
+              //usuario escriba dentro de input
+            />
+          </View>
 
-        <View style={styles.campo}>
-          <TextInput
-            style={styles.input}
-            placeholder='Titulo...'
-            placeholderTextColor='#888'
-            value={titulo}
-            onChangeText={setTitulo} //Evento que sirve para recibir el valor de lo que el
-          //usuario escriba dentro de input
-
-          />
-        </View>
-
-        <View style={styles.campo}>
-          <TextInput
-            style={[styles.input, styles.inputArea]}
-            placeholder='Contenido...'
-            placeholderTextColor='#888'
-            multiline={true}
-            numberOfLines={4}
-            value={contenido}
-            onChangeText={setContenido}
-          />
-        </View>
-        <Pressable
-          style={styles.btnNuevaNota}
-          onPress={() => handleNota()}
-        >
-          <Text style={styles.btnNuevaNotaTexto}>Agregar Nota</Text>
-        </Pressable>
+          <View style={styles.campo}>
+            <TextInput
+              style={[styles.input, styles.inputArea]}
+              placeholder="Contenido..."
+              placeholderTextColor="#888"
+              multiline={true}
+              numberOfLines={4}
+              value={contenido}
+              onChangeText={setContenido}
+            />
+          </View>
+          <Pressable style={styles.btnNuevaNota} onPress={() => handleNota()}>
+            <Text style={styles.btnNuevaNotaTexto}>
+              {nota.id ? 'Editar' : 'Agregar'} Nota
+            </Text>
+          </Pressable>
+        </SafeAreaView>
       </ScrollView>
-
     </Modal>
   );
 };
 
+//Por medio del componente StyleSheet creamos la hoja de estilos
+//de nuestro componente
 const styles = StyleSheet.create({
   contenido: {
     backgroundColor: '#593959ff',
@@ -107,8 +147,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFF',
-    marginBottom: 5
-
+    marginBottom: 5,
   },
   tituloBold: {
     fontWeight: '900',
@@ -126,7 +165,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '900',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   campo: {
     marginTop: 10,
@@ -139,12 +178,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     borderRadius: 10,
     padding: 10,
-    marginBottom: 15
+    marginBottom: 15,
   },
   inputArea: {
     textAlignVertical: 'top',
     height: 300,
-    fontSize: 20
+    fontSize: 20,
   },
   btnNuevaNota: {
     marginTop: 40,
@@ -160,6 +199,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontSize: 16,
     fontWeight: '900',
-  }
-})
+  },
+});
 export default Formulario;

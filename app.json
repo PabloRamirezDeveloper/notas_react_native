@@ -1,4 +1,11 @@
 {
   "name": "notas",
-  "displayName": "notas"
+  "displayName": "notas",
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "babfdaef-c619-41d3-b774-89fb0afb84b0"
+      }
+    }
+  }
 }

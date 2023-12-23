@@ -52,7 +52,7 @@ const Formulario = ({
     //si estamos editando
 
     if (id) {
-      // editando una nota
+      // editando una nota por medio del id
       nuevaNota.id = id;
       const notasActualizadas = notas.map(notaState =>
         notaState.id === nuevaNota.id ? nuevaNota : notaState,
@@ -62,8 +62,8 @@ const Formulario = ({
 
       setNota({});
     } else {
-      //agregando una nueva nota
 
+      //agregando una nueva nota
       nuevaNota.id = Date.now();
       setNotas([...notas, nuevaNota]);
     }
@@ -90,7 +90,7 @@ const Formulario = ({
 
           <Pressable
             style={styles.btnCancelar}
-            onLongPress={() => {
+            onPress={() => {
               cerrarModalForm();
               setNota({});
               setTitulo('');
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '400',
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 50,
     color: '#FFF',
     marginBottom: 5,
   },
@@ -153,8 +153,8 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   btnCancelar: {
-    marginTop: 15,
-    marginBottom: 40,
+    marginTop: 20,
+    marginBottom: 20,
     marginHorizontal: 30,
     backgroundColor: '#55d6beff',
     padding: 15,
@@ -178,16 +178,16 @@ const styles = StyleSheet.create({
     fontSize: 25,
     borderRadius: 10,
     padding: 10,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   inputArea: {
     textAlignVertical: 'top',
-    height: 300,
+    height: 310,
     fontSize: 20,
   },
   btnNuevaNota: {
-    marginTop: 40,
-    marginBottom: 30,
+    marginTop: 20,
+    marginBottom: 20,
     backgroundColor: '#2e5eaaff',
     marginHorizontal: 30,
     paddingVertical: 15,

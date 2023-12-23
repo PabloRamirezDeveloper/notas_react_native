@@ -2,10 +2,13 @@ import React from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { formaterFecha } from '../helpers';
 
+//Este componente sirve para mostrar el resumen de una nota
+//en un componente modal al ejecutarse el evento onPress
 const InformacionNota = ({ nota, setNota, setModalNota }) => {
+
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.contenedor}>
+    <ScrollView style={styles.contenedor}>
+      <SafeAreaView >
         <Text style={styles.cabecera}>
           Resumen {''}
           <Text style={styles.cabeceraBold}>Nota</Text>
@@ -13,7 +16,7 @@ const InformacionNota = ({ nota, setNota, setModalNota }) => {
 
         <View>
           <Pressable
-            onLongPress={() => {
+            onPress={() => {
               setModalNota(false);
               setNota({});
             }}
@@ -54,16 +57,16 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '400',
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 50,
     color: '#FFF',
-    marginBottom: 5,
+    
   },
   cabeceraBold: {
     fontWeight: '900',
   },
   btnCerrar: {
-    marginTop: 15,
-    marginBottom: 40,
+    marginTop: 30,
+    marginBottom: 90,
     marginHorizontal: 30,
     backgroundColor: '#7cea9cff',
     padding: 15,
@@ -96,14 +99,14 @@ const styles = StyleSheet.create({
   },
   label: {
     textTransform: 'uppercase',
-    color: '#374151',
+    color: '#555',
     fontWeight: '600',
     fontSize: 13,
   },
   valor: {
     fontWeight: '700',
-    fontSize: 20,
-    color: '#334155',
+    fontSize: 22,
+    color: '#000',
   },
   contenido: {
     textAlign: 'justify',

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   Modal,
   SafeAreaView,
 } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Formulario from './src/components/Formulario';
 import Nota from './src/components/Nota';
 import InformacionNota from './src/components/InformacionNota';
@@ -18,6 +20,36 @@ const App = () => {
   const [nota, setNota] = useState({});
   const [modalNota, setModalNota] = useState(false);
 
+  //useEfect que sirve para obtener los datos guardados en
+  //AsyncStorage
+  useEffect(() => {
+    const obtenerNotas = async () => {
+
+      try {
+        const notasStorage = await AsyncStorage.getItem('notas') ?? [];
+        setNotas(JSON.parse(notasStorage));
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    obtenerNotas();
+  }, [])
+
+
+  //UseEffect para guardar los datos en AsyncStorage
+  useEffect(() => {
+    const almacenarNotas = async () => {
+      try {
+        await AsyncStorage.setItem('notas', JSON.stringify(notas));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    almacenarNotas();
+  }, [notas])
+
+
+
   //Funcion que sirve llenar el objeto nota, para que luego pueda
   //ser editado
   const notaEditar = id => {
@@ -25,13 +57,13 @@ const App = () => {
     setNota(notaEditar[0]);
   };
 
-  //Funcion que sirve para eliminar una nota
+  //Funcion que sirve para eliminar una nota en base a su id
   const notaEliminar = id => {
     Alert.alert(
       '¿Deseas eliminar la nota?',
       'La nota eliminada no se podrá recuperar',
       [
-        {text: 'Cancelar'},
+        { text: 'Cancelar' },
         {
           text: 'Si, Eliminar',
           onPress: () => {
@@ -45,6 +77,7 @@ const App = () => {
   const cerrarModalForm = () => {
     setModalVisible(false);
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titulo}>
@@ -67,7 +100,7 @@ const App = () => {
           style={styles.listado}
           data={notas}
           keyExtractor={item => item.id} //Va a buscar en el arreglo un valor que sea único
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             //Es como se nombra al componente que se va a mostrar
 
             return (
@@ -109,7 +142,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#55d6beff',
     flex: 1, //React Native usa por defecto flex-direction: column
-    paddingTop: 30,
+    paddingTop: 50,
   },
   titulo: {
     textAlign: 'center',
@@ -124,7 +157,7 @@ const styles = StyleSheet.create({
   btnNuevaNota: {
     backgroundColor: '#593959ff',
     padding: 15,
-    marginTop: 30,
+    marginTop: 20,
     marginHorizontal: 20, //En RN no existen shothands. Para ajustar los margenes de iz y der su
     //se usa la propiedad marginHorizontal
     borderRadius: 10,
@@ -143,7 +176,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   listado: {
-    marginTop: 50,
+    marginTop: 20,
+    marginBottom: 20,
     marginHorizontal: 30,
   },
 }); //Ya que styles se declara como un objeto,

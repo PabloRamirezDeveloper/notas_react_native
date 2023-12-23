@@ -1,6 +1,11 @@
 import React from 'react';
 import {Text, View, StyleSheet, Pressable, SafeAreaView} from 'react-native';
 import {formaterFecha} from '../helpers';
+
+//Componente que muestra las notas creadas por el usuario,
+//las cuales son guardadas en el arreglo notas. Por medio
+//de este componente tambien podemos editar y eliminar una
+//nota
 const Nota = ({
   item,
   setModalVisible,
@@ -13,7 +18,7 @@ const Nota = ({
 
   return (
     <Pressable
-      onLongPress={() => {
+      onPress={() => {
         setModalNota(true);
         setNota(item);
       }}>
@@ -25,7 +30,7 @@ const Nota = ({
         <View style={styles.contenedorBotones}>
           <Pressable
             style={[styles.btn, styles.btnEditar]}
-            onLongPress={() => {
+            onPress={() => {
               setModalVisible(true);
               notaEditar(id);
             }}>
@@ -34,7 +39,7 @@ const Nota = ({
 
           <Pressable
             style={[styles.btn, styles.btnEliminar]}
-            onLongPress={() => {
+            onPress={() => {
               notaEliminar(id);
             }}>
             <Text style={styles.btnTexto}>Eliminar</Text>
@@ -56,11 +61,11 @@ const styles = StyleSheet.create({
     color: '#7cea9cff',
     textTransform: 'uppercase',
     fontWeight: '900',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   texto: {
     color: '#FFF',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
   },
   fecha: {
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btn: {
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
